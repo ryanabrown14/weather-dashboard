@@ -18,11 +18,14 @@
             <div class="col-4 bg-light">
                 <h3 class="search header">Search for a city</h3>
                 <div class="input-group  mb-3">
-                    <input id="city-input" type="text" class="form-control" placeholder="City Name" />
-                    <div class="input-group-append">
+                    <form id="city-input">
+                        <label class="form-label" for="city">City</label>
+                        <input name="city" id="city-name" type="text" autofocus="true" class="form-input" />
                         <button class="btn btn-primary" type="submit" id="search-btn">Search</button>
-                    </div>
+    
+                    </form> 
                 </div>
+
             </div>
             <form id="history">
 
@@ -32,8 +35,8 @@
                     <div class="col-12 border border-dark">
                         <div class="row">
                             <div class="col-12">
-                                <span id="city-name" class="city-name text-center"></span>
-                                <img id="current-pic" src="" alt="">
+                                <span id="city" class="city-name text-center"></span>
+                                <img id="weather-pic" src="" alt="">
                             </div>
                         </div>
                         <div class="row">
