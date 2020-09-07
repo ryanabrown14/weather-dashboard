@@ -21,7 +21,7 @@ var getWeather = function(cityName){
         if (response.ok){
             response.json().then(function(data){
                 console.log(data);
-                city.innerHTML = data.name + " (" + date +")";
+                city.innerHTML = "<h4 class = 'float-left'>" + data.name + " (" + date +")" +"</h4>";
                 if (data.weather[0].main === "Clouds") { 
                     weatherPicEl.innerHTML = "<i class='fas fa-cloud-sun' style='font-size:36px;'></i>"
                     
@@ -38,12 +38,47 @@ var getWeather = function(cityName){
                     weatherPicEl.innerHTML = "<i class='fas fa-snowflake' style='font-size:36px'></i>"
 
                 }
+                else if (data.weather[0].main === "Rain") {
+                    weatherPicEl.innerHTML = "<i class='fas fa-cloud-showers-heavy' style='font-size:36px'></i>"
+
+                }
+                else if (data.weather[0].main === "Drizzle") {
+                    weatherPicEl.innerHTML = "<i class='fas fa-cloud-rain' style='font-size:36px'></i>"
+
+                }
+                
                 TempEl.innerHTML = "Temperature: " + (data.main.temp) + " F";
                 humidityEl.innerHTML = "Humidity: " + (data.main.humidity) +"%"
                 windEl.innerHTML = "WindSpeed: " + (data.wind.speed) + " MPH"; 
                 
 
-            
+            var lat = data.coord.lat;
+            var lon = data.coord.lon;
+            var apiURL3 = "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + lat + "&lon=" + lon + "&appid=f34530967c73604c84c0dd9cb56da8a8";
+            fetch(apiURL3).then(function(response){
+                if(response.ok){
+                
+                    response.json().then(function(data){
+                        if (data[0].value < 3){
+                            var name = "'badge badge-success'" 
+                        }
+                        else if (data[0].value <= 5)  {
+                            var name = "'badge badge-warning'"
+                        }
+                        else{
+                            var name = "'badge badge-danger'"
+                        }
+                        
+                        uvEl.innerHTML = "UV Index: " + "<span class =" + name + ">" + data[0].value; + "</span>";
+
+
+                    })
+
+                    
+                }
+
+
+            });
 
 
                 
@@ -72,16 +107,45 @@ var getWeather = function(cityName){
                     var daily = document.createElement("div");
                     daily.className = "card daily";
 
+
                     var forecastDate = (data.list[i].dt_txt);
                     console.log(forecastDate);
                     var dateText = document.createElement("h4");
                     dateText.textContent = forecastDate;
                     dateText.className = "text";
 
+                    var weatherImg = document.createElement("div");
+
+                    if (data.list[i].weather[0].main === "Clouds") { 
+                        weatherImg.innerHTML = "<i class='fas fa-cloud-sun' style='font-size:36px;'></i>"
+                        
+                    }
+                    else if (data.list[i].weather[0].main === "Clear") {
+                        weatherImg.innerHTML = "<i class='fas fa-sun' style='font-size:36px'></i>"
+    
+                    }
+                    else if (data.list[i].weather[0].main === "Thunderstorm") {
+                        weatherImg.innerHTML = "<i class='fas fa-bolt' style='font-size:36px'></i>"
+    
+                    }
+                    else if (data.list[i].weather[0].main === "Snowing") {
+                        weatherImg.innerHTML = "<i class='fas fa-snowflake' style='font-size:36px'></i>"
+    
+                    }
+                    else if (data.list[i].weather[0].main === "Rain") {
+                        weatherImg.innerHTML = "<i class='fas fa-cloud-showers-heavy' style='font-size:36px'></i>"
+    
+                    }
+                    else if (data.list[i].weather[0].main === "Drizzle") {
+                        weatherImg.innerHTML = "<i class='fas fa-cloud-rain' style='font-size:36px'></i>"
+    
+                    }
+
+
                     var temp = parseInt(data.list[i].main.temp);
                     console.log(temp);
                     var tempText = document.createElement("p")
-                    tempText.textContent = "Temp: " + temp + " °F";
+                    tempText.textContent = "Temp: " + temp + " F";
                     tempText.className = "text";
 
                     var humidity = data.list[i].main.humidity;
@@ -89,7 +153,7 @@ var getWeather = function(cityName){
                     humidityText.textContent = "Humidity:" + humidity + "%";
                     humidityText.className = "text";
                     
-                    daily.append( dateText, tempText, humidityText);
+                    daily.append( dateText, weatherImg, tempText, humidityText);
                     forecastEL.append(daily);
                     
                     
@@ -108,22 +172,24 @@ var getWeather = function(cityName){
 
 
 
-
-
-
 var formSubmitHandler = function(event) {
     event.preventDefault();
     var city = cityNameEl.value;
     
 
     if (city) {
+        localStorage.setItem("city", JSON.stringify(city) );
         getWeather(city);
         cityNameEl.value = "";
+        
+        
 
     }
     else{
         alert("Please enter a city");
     }
 };
+
+
 
 inputEL.addEventListener("submit", formSubmitHandler);
