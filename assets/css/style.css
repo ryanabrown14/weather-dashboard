@@ -1,0 +1,19 @@
+.daily{
+    background-color:#0262cf;
+    margin: 10px;
+    height: 200px;
+    align-content: space-between;
+    width: auto;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.text{
+    color: white;
+}
+
+.forecast{
+    width: 80%;
+    margin: auto;
+    display: flex;
+}
